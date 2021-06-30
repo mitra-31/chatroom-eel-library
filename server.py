@@ -1,7 +1,7 @@
 import threading
 import socket
 
-host = socket.gethostbyname("chatroomserver.herokuapp.com")
+host = socket.gethostbyname("mitrachatroomserver.herokuapp.com")
 port = 8080
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((host, port))
