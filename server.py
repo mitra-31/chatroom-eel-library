@@ -1,66 +1,56 @@
-import socket
 import threading
+import socket
 
-
-# Connection Data
-host = ''
-port = 9999
-
-# Starting Server
+host = socket.gethostbyname("chatroomserver.herokuapp.com")
+port = 8080
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((host, port))
-server.listen(10)
+server.listen()
 
-# Lists For Clients and Their Nicknames
+print(f"Starting up on {host}  {port} ")
+
 clients = []
-nicknames = []
+aliases = []
 
 
-# Sending Messages To All Connected Clients
 def broadcast(message):
     for client in clients:
         client.send(message)
-        chat = open('chat.txt','a+')
-        
 
-# Handling Messages From Clients
-def handle(client):
+# Function to handle clients'connections
+
+
+def handle_client(client):
     while True:
         try:
-            # Broadcasting Messages
             message = client.recv(1024)
             broadcast(message)
         except:
-            # Removing And Closing Clients
             index = clients.index(client)
             clients.remove(client)
             client.close()
-            nickname = nicknames[index]
-            broadcast('{} left!'.format(nickname).encode())
-            nicknames.remove(nickname)
+            alias = aliases[index]
+            broadcast(f'{alias} has left the chat room!'.encode('utf-8'))
+            aliases.remove(alias)
             break
+# Main function to receive the clients connection
 
-# Receiving / Listening Function
+
 def receive():
     while True:
-        # Accept Connection
+        print('Server is running and listening ...')
         client, address = server.accept()
-        print("Connected with {}".format(str(address)))
-
-        # Request And Store Nickname
-        client.send('NICK'.encode())
-        nickname = client.recv(1024).decode()
-        nicknames.append(nickname)
+        print(f'connection is established with {str(address)}')
+        client.send('alias?'.encode('utf-8'))
+        alias = client.recv(1024)
+        aliases.append(alias)
         clients.append(client)
-
-        # Print And Broadcast Nickname
-        print("Nickname is {}".format(nickname))
-        broadcast("{} joined!".format(nickname).encode())
-        client.send('Connected to server!'.encode())
-
-        # Start Handling Thread For Client
-        thread = threading.Thread(target=handle, args=(client,))
+        print(f'The alias of this client is {alias}'.encode('utf-8'))
+        broadcast(f'{alias} has connected to the chat room'.encode('utf-8'))
+        client.send('you are now connected!'.encode('utf-8'))
+        thread = threading.Thread(target=handle_client, args=(client,))
         thread.start()
 
-print("SERVER RUNNING ON {}......".format(host))
-receive()
+
+if __name__ == "__main__":
+    receive()
