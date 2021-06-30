@@ -1,10 +1,10 @@
+
 import threading
 import socket
 alias = input('Choose an alias >>> ')
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-host = socket.gethostbyname('ip-172-31-10-32.us-east-2.compute.internal')
-print(host)
-client.connect((host, 60600))
+client = socket.socket()
+host = '3.12.159.19'
+client.connect((host, 55050))
 
 
 def client_receive():

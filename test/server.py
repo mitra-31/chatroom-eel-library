@@ -1,10 +1,14 @@
 import threading
 import socket
-host = '127.0.0.1'
-port = 60600
+
+host = socket.gethostbyname("chatroomserver.herokuapp.com")
+port = 8080
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((host, port))
 server.listen()
+
+print(f"Starting up on {host}  {port} ")
+
 clients = []
 aliases = []
 

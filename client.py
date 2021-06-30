@@ -2,12 +2,12 @@ import socket
 import threading
 
 # Choosing Nickname
+nickname = input("Choose your nickname: ")
 
 # Connecting To Server
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect(('192.168.0.105', 9999))
+client.connect(('192.168.0.106', 9999))
 
-nickname = input("Choose your nickname: ")
 
 
 # Listening to Server and Sending Nickname
@@ -33,12 +33,10 @@ def write():
         client.send(message.encode())
 
 
-def main():
-    # Starting Threads For Listening And Writing
-    receive_thread = threading.Thread(target=receive)
-    receive_thread.start()
 
-    write_thread = threading.Thread(target=write)
-    write_thread.start()
+receive_thread = threading.Thread(target=receive)
+receive_thread.start()
 
-main()
+write_thread = threading.Thread(target=write)
+write_thread.start()
+
